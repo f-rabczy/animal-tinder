@@ -24,7 +24,7 @@ import pl.wsiz.animaltinder.auth.filter.JwtRequestFilter;
 @EnableWebSecurity
 @Configuration
 @RequiredArgsConstructor
-public class WebSecurityConfig  {
+public class  WebSecurityConfig  {
 
     private final UserDetailsService userDetailsService;
     private final JwtRequestFilter jwtRequestFilter;

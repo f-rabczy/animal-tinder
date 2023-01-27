@@ -5,6 +5,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import pl.wsiz.animaltinder.auth.exception.BusinessException;
+import pl.wsiz.animaltinder.auth.exception.ErrorMessage;
 import pl.wsiz.animaltinder.user.api.dto.UserCreateDto;
 import pl.wsiz.animaltinder.user.api.dto.UserDto;
 import pl.wsiz.animaltinder.user.domain.UserService;
@@ -29,7 +31,7 @@ class UserController {
 
     @GetMapping
     List<String> get(){
-        return List.of("siema", "eniu");
+        throw new BusinessException(ErrorMessage.USER_ACCOUNT_SUSPENDED);
     }
 
 }

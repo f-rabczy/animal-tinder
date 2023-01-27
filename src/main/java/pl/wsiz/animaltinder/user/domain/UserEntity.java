@@ -3,6 +3,7 @@ package pl.wsiz.animaltinder.user.domain;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import pl.wsiz.animaltinder.animal.domain.AnimalEntity;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -10,6 +11,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -66,6 +68,9 @@ public class UserEntity {
 
     @Embedded
     private Address address;
+
+    @OneToMany(mappedBy = "user")
+    private List<AnimalEntity> animals;
 
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     @JoinTable(
