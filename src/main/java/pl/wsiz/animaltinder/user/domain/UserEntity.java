@@ -8,6 +8,7 @@ import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -45,6 +46,26 @@ public class UserEntity {
     @NotNull
     @Email
     private String email;
+
+    @Column(name = "IS_BANNED")
+    @NotNull
+    private boolean banned = false;
+
+    @Column(name = "IS_SUSPENDED")
+    @NotNull
+    private boolean suspended = false;
+
+    @Column(name = "BANNED_TIME")
+    private LocalDate bannedTime;
+
+    @Column(name = "SUSPENDED_TIME")
+    private LocalDate suspendedTime;
+
+    @Column(name = "SUSPENDED_UNTIL")
+    private LocalDate suspendedUntil;
+
+    @Embedded
+    private Address address;
 
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     @JoinTable(

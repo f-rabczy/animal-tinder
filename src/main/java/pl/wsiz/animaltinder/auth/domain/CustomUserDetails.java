@@ -6,6 +6,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import pl.wsiz.animaltinder.user.domain.UserEntity;
 
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -18,6 +19,9 @@ public class CustomUserDetails implements UserDetails {
     private final boolean active;
     private final List<GrantedAuthority> authorities;
     private final Long id;
+    private final boolean suspended;
+    private final boolean banned;
+    private final LocalDate suspendedUntil;
 
     public CustomUserDetails(UserEntity user) {
         this.userName = user.getUsername();
@@ -27,6 +31,9 @@ public class CustomUserDetails implements UserDetails {
                 .map(roleEntity -> new SimpleGrantedAuthority("ROLE_" + roleEntity.getName().name()))
                 .collect(Collectors.toList());
         this.id = user.getId();
+        this.suspended = user.isSuspended();
+        this.banned = user.isBanned();
+        this.suspendedUntil = suspended ? user.getSuspendedUntil() : null;
     }
 
     @Override

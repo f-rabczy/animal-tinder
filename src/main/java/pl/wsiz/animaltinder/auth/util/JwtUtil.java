@@ -22,6 +22,9 @@ public class JwtUtil {
 
     public static final String ID_CLAIM_MAP_KEY = "id";
     public static final String ROLES_CLAIM_MAP_KEY = "roles";
+    public static final String IS_SUSPENDED = "isSuspended";
+    public static final String IS_BANNED = "isBanned";
+    public static final String SUSPENDED_UNTIL = "suspendedUntil";
 
     private final JwtProperties jwtProperties;
 
@@ -77,6 +80,11 @@ public class JwtUtil {
                 .collect(Collectors.toList());
         claims.put(ID_CLAIM_MAP_KEY, userDetails.getId());
         claims.put(ROLES_CLAIM_MAP_KEY, roles);
+        claims.put(IS_SUSPENDED,userDetails.isSuspended());
+        claims.put(IS_BANNED,userDetails.isBanned());
+        if(userDetails.isSuspended())
+            claims.put(SUSPENDED_UNTIL,userDetails.getSuspendedUntil());
+
         return claims;
     }
 
