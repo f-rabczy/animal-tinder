@@ -14,7 +14,7 @@ public class InteractionService {
 
     private final AnimalInteractionRepository animalInteractionRepository;
     private final AnimalService animalService;
-    private final PairingRepository pairingRepository;
+    private final InteractionRecordRepository interactionRecordRepository;
 
     @Transactional
     public void likeAnimal(Long animalId, Long animalIdToLike){
@@ -28,7 +28,7 @@ public class InteractionService {
             if(interactionFromAnimalToLike.getLikingStatus().equals(LikingStatus.LIKE)) {
                 interactionFromAnimalToLike.setMatchingStatus(MatchingStatus.MATCHED);
 
-                //send to both info bout match
+
             }
         }else {
             AnimalInteractionEntity animalInteractionEntity = AnimalInteractionEntity.builder()
@@ -76,14 +76,14 @@ public class InteractionService {
     }
 
     private void addPairingHistoryForAnimal(AnimalEntity animal, Long pairedAnimalId){
-        List<Long> allPairedIds = pairingRepository.findAllPairedIds(animal.getId());
+        List<Long> allPairedIds = interactionRecordRepository.findAllPairedIds(animal.getId());
         if(!allPairedIds.contains(pairedAnimalId)){
-            PairingEntity pairingEntity = PairingEntity.builder()
+            InteractionRecordEntity interactionRecordEntity = InteractionRecordEntity.builder()
                     .owner(animal)
                     .pairedAnimalId(pairedAnimalId)
                     .build();
-            animal.getPairedAnimals().add(pairingEntity);
-            pairingRepository.save(pairingEntity);
+            animal.getAnimalsInteractionHistory().add(interactionRecordEntity);
+            interactionRecordRepository.save(interactionRecordEntity);
         }
     }
 }

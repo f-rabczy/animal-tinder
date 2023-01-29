@@ -1,7 +1,6 @@
 package pl.wsiz.animaltinder.animal.domain;
 
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import pl.wsiz.animaltinder.user.domain.UserEntity;
 
@@ -49,9 +48,8 @@ public class AnimalEntity {
     @JoinColumn(name = "user_id")
     private UserEntity user;
 
+    
     @OneToMany(mappedBy = "owner",cascade = {CascadeType.PERSIST,CascadeType.MERGE,CascadeType.REMOVE})
-    private Set<PairingEntity> pairedAnimals = new HashSet<>();
-
-
+    private Set<InteractionRecordEntity> animalsInteractionHistory = new HashSet<>();
 
 }

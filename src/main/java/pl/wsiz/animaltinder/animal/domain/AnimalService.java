@@ -19,7 +19,7 @@ public class AnimalService {
     private final AnimalRepository animalRepository;
     private final UserService userService;
     private final AnimalMapper animalMapper;
-    private final PairingRepository pairingRepository;
+    private final InteractionRecordRepository interactionRecordRepository;
 
     public AnimalDto addAnimal(Long userId, AnimalCreateDto animalCreateDto) {
         UserEntity user = userService.getUser(userId);
@@ -31,7 +31,7 @@ public class AnimalService {
     public List<AnimalDto> getAnimalProposition(Long userId, Long animalId) {
         UserEntity user = userService.getUser(userId);
         AnimalEntity animal = getUserAnimal(user, animalId);
-        List<Long> allPairedAnimalsIds = pairingRepository.findAllPairedIds(animalId);
+        List<Long> allPairedAnimalsIds = interactionRecordRepository.findAllPairedIds(animalId);
 
         return animalRepository.findAllByCityAndCountyAndCategoryAndUserNot(animal.getCity(), animal.getCounty(), animal.getCategory(), user)
                 .stream()

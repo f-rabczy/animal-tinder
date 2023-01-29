@@ -10,12 +10,12 @@ import javax.validation.constraints.NotNull;
 import java.util.Objects;
 
 @Entity
-@Table(name = "PAIRINGS")
+@Table(name = "INTERACTION_RECORDS")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class PairingEntity {
+public class InteractionRecordEntity {
 
     @Id
     @Column(name = "ID")
@@ -33,7 +33,7 @@ public class PairingEntity {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof PairingEntity that)) return false;
+        if (!(o instanceof InteractionRecordEntity that)) return false;
         return Objects.equals(id, that.id);
     }
 
