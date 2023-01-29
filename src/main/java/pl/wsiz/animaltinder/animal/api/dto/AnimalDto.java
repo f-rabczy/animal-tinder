@@ -1,9 +1,8 @@
 package pl.wsiz.animaltinder.animal.api.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import pl.wsiz.animaltinder.animal.domain.AnimalCategory;
 
-@AllArgsConstructor
-@Data
-public class AnimalDto {
+
+public record AnimalDto(Long id, String name, String description, int age, AnimalCategory category) {
+
 }

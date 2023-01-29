@@ -17,4 +17,10 @@ public class UserCreateDto {
     private String firstName;
     @NotEmpty(message = "Last name must not be empty")
     private String lastName;
+    @NotEmpty(message = "Last name must not be empty")
+    private String city;
+    @NotEmpty(message = "Last name must not be empty")
+    private String county;
+    @NotEmpty(message = "Last name must not be empty")
+    private String voivodeship;
 }

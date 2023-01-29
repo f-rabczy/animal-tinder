@@ -34,7 +34,15 @@ public class AnimalEntity {
     @Enumerated(EnumType.STRING)
     private AnimalCategory category;
 
-    @ManyToOne
+    @Column(name = "CITY")
+    @NotNull
+    private String city;
+
+    @Column(name = "COUNTY")
+    @NotNull
+    private String county;
+
+    @ManyToOne(cascade = {CascadeType.PERSIST,CascadeType.MERGE})
     @JoinColumn(name = "user_id")
     private UserEntity user;
 
