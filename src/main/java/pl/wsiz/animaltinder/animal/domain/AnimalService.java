@@ -19,7 +19,7 @@ public class AnimalService {
     private final AnimalRepository animalRepository;
     private final UserService userService;
     private final AnimalMapper animalMapper;
-    private final LikeRepository likeRepository;
+    private final PairingRepository pairingRepository;
 
     public AnimalDto addAnimal(Long userId, AnimalCreateDto animalCreateDto) {
         UserEntity user = userService.getUser(userId);
@@ -31,48 +31,16 @@ public class AnimalService {
     public List<AnimalDto> getAnimalProposition(Long userId, Long animalId) {
         UserEntity user = userService.getUser(userId);
         AnimalEntity animal = getUserAnimal(user, animalId);
+        List<Long> allPairedAnimalsIds = pairingRepository.findAllPairedIds(animalId);
 
         return animalRepository.findAllByCityAndCountyAndCategoryAndUserNot(animal.getCity(), animal.getCounty(), animal.getCategory(), user)
                 .stream()
+                .filter(animal1 -> !allPairedAnimalsIds.contains(animal1.getId()))
                 .map(animalMapper::mapToAnimalDto)
                 .toList();
     }
 
-    public void likeAnimal(Long animalId, Long animalIdToLike){
-        AnimalEntity animal = getAnimal(animalId);
-        AnimalEntity animalToLike = getAnimal(animalIdToLike);
-
-        LikeEntity likeThatAlreadyExists = likeRepository.findByInvokerAndReceiver(animalToLike, animal);
-        if(likeThatAlreadyExists != null){
-            if(likeThatAlreadyExists.getLikingStatus().equals(LikingStatus.LIKE)){
-                likeThatAlreadyExists.setMatchingStatus(MatchingStatus.MATCHED);
-                //send to both info bout match
-            }else{
-                likeThatAlreadyExists.setMatchingStatus(MatchingStatus.UNMATCHED);
-            }
-        }else{
-            LikeEntity likeEntity = LikeEntity.builder()
-                    .invoker(animal)
-                    .receiver(animalToLike)
-                    .likingStatus(LikingStatus.LIKE)
-                    .build();
-            likeRepository.save(likeEntity);
-        }
-    }
-
-
-
-    public void dislikeAnimal(Long animalId, Long animalIdToDislike){
-        AnimalEntity animal = getAnimal(animalId);
-        AnimalEntity animalToDislike = getAnimal(animalIdToDislike);
-
-        LikeEntity likeThatAlreadyExists = likeRepository.findByInvokerAndReceiver(animalToDislike, animal);
-
-
-    }
-
-
-    private AnimalEntity getAnimal(Long id) {
+    public AnimalEntity getAnimal(Long id) {
         return animalRepository.findById(id).orElseThrow(EntityNotFoundException::new);
     }
 

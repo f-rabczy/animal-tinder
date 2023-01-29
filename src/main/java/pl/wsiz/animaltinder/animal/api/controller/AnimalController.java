@@ -1,4 +1,4 @@
-package pl.wsiz.animaltinder.animal.api;
+package pl.wsiz.animaltinder.animal.api.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

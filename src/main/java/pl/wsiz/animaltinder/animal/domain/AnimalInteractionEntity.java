@@ -8,12 +8,12 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "ANIMALS")
+@Table(name = "ANIMAL_INTERACTIONS")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class LikeEntity {
+public class AnimalInteractionEntity {
 
     @Id
     @Column(name = "ID")
@@ -33,4 +33,7 @@ public class LikeEntity {
     @Column(name = "MATCHING_STATUS")
     @Enumerated(EnumType.STRING)
     private MatchingStatus matchingStatus;
+
+    @Transient
+    private boolean pairingInitiated = matchingStatus != null;
 }
