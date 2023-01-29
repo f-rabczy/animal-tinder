@@ -6,6 +6,7 @@ import pl.wsiz.animaltinder.auth.exception.BusinessException;
 import pl.wsiz.animaltinder.auth.exception.ErrorMessage;
 
 import javax.transaction.Transactional;
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -14,76 +15,92 @@ public class InteractionService {
 
     private final AnimalInteractionRepository animalInteractionRepository;
     private final AnimalService animalService;
-    private final InteractionRecordRepository interactionRecordRepository;
+    private final InteractionRepository interactionRepository;
+    private final MatchingRepository matchingRepository;
 
     @Transactional
-    public void likeAnimal(Long animalId, Long animalIdToLike){
+    public void likeAnimal(Long animalId, Long animalIdToLike) {
         AnimalEntity animal = animalService.getAnimal(animalId);
         AnimalEntity animalToLike = animalService.getAnimal(animalIdToLike);
 
         AnimalInteractionEntity interactionFromAnimalToLike = animalInteractionRepository.findByInvokerAndReceiver(animalToLike, animal);
-        validateIfInteractionAlreadyExist(animal,animalToLike);
+        validateIfInteractionAlreadyExist(animal, animalToLike);
 
-        if(interactionFromAnimalToLike != null){
-            if(interactionFromAnimalToLike.getLikingStatus().equals(LikingStatus.LIKE)) {
+        if (interactionFromAnimalToLike != null) {
+            if (interactionFromAnimalToLike.getLikingStatus().equals(LikingStatus.LIKE)) {
                 interactionFromAnimalToLike.setMatchingStatus(MatchingStatus.MATCHED);
-
-
+                createMatchingForAnimals(animal,animalToLike);
             }
-        }else {
+        } else {
             AnimalInteractionEntity animalInteractionEntity = AnimalInteractionEntity.builder()
                     .invoker(animal)
                     .receiver(animalToLike)
                     .likingStatus(LikingStatus.LIKE)
                     .build();
-            addPairingHistoryForAnimals(animal,animalToLike);
+            createPairingHistoryForAnimals(animal, animalToLike);
             animalInteractionRepository.save(animalInteractionEntity);
         }
     }
 
     @Transactional
-    public void dislikeAnimal(Long animalId, Long animalIdToDislike){
+    public void dislikeAnimal(Long animalId, Long animalIdToDislike) {
         AnimalEntity animal = animalService.getAnimal(animalId);
         AnimalEntity animalToDislike = animalService.getAnimal(animalIdToDislike);
 
         AnimalInteractionEntity likeThatAlreadyExists = animalInteractionRepository.findByInvokerAndReceiver(animalToDislike, animal);
-        validateIfInteractionAlreadyExist(animal,animalToDislike);
+        validateIfInteractionAlreadyExist(animal, animalToDislike);
 
-        if(likeThatAlreadyExists != null){
+        if (likeThatAlreadyExists != null) {
             likeThatAlreadyExists.setMatchingStatus(MatchingStatus.UNMATCHED);
-        }else{
+        } else {
             AnimalInteractionEntity animalInteractionEntity = AnimalInteractionEntity.builder()
                     .invoker(animal)
                     .receiver(animalToDislike)
                     .likingStatus(LikingStatus.DISLIKE)
                     .matchingStatus(MatchingStatus.UNMATCHED)
                     .build();
-            addPairingHistoryForAnimals(animal,animalToDislike);
+            createPairingHistoryForAnimals(animal, animalToDislike);
             animalInteractionRepository.save(animalInteractionEntity);
         }
     }
 
-    private void validateIfInteractionAlreadyExist(AnimalEntity animal, AnimalEntity animalToInteractWith ){
+    private void validateIfInteractionAlreadyExist(AnimalEntity animal, AnimalEntity animalToInteractWith) {
         AnimalInteractionEntity interactionFromInvokingAnimal = animalInteractionRepository.findByInvokerAndReceiver(animal, animalToInteractWith);
-        if(interactionFromInvokingAnimal != null){
+        if (interactionFromInvokingAnimal != null) {
             throw new BusinessException(ErrorMessage.INTERACTION_ALREADY_EXISTS);
         }
     }
 
-    private void addPairingHistoryForAnimals(AnimalEntity animalOne, AnimalEntity animalTwo){
-        addPairingHistoryForAnimal(animalOne, animalTwo.getId());
-        addPairingHistoryForAnimal(animalTwo, animalOne.getId());
+    private void createPairingHistoryForAnimals(AnimalEntity animalOne, AnimalEntity animalTwo) {
+        savePairing(animalOne, animalTwo.getId());
+        savePairing(animalTwo, animalOne.getId());
     }
 
-    private void addPairingHistoryForAnimal(AnimalEntity animal, Long pairedAnimalId){
-        List<Long> allPairedIds = interactionRecordRepository.findAllPairedIds(animal.getId());
-        if(!allPairedIds.contains(pairedAnimalId)){
-            InteractionRecordEntity interactionRecordEntity = InteractionRecordEntity.builder()
+    private void savePairing(AnimalEntity animal, Long pairedAnimalId) {
+        List<Long> allPairedIds = interactionRepository.findAllPairedIds(animal.getId());
+        if (!allPairedIds.contains(pairedAnimalId)) {
+            InteractionEntity interactionEntity = InteractionEntity.builder()
                     .owner(animal)
                     .pairedAnimalId(pairedAnimalId)
                     .build();
-            animal.getAnimalsInteractionHistory().add(interactionRecordEntity);
-            interactionRecordRepository.save(interactionRecordEntity);
+            animal.getAnimalsInteractionHistory().add(interactionEntity);
+            interactionRepository.save(interactionEntity);
         }
     }
+
+    private void createMatchingForAnimals(AnimalEntity animalOne, AnimalEntity animalTwo) {
+        saveMatching(animalOne, animalTwo.getId());
+        saveMatching(animalTwo, animalOne.getId());
+    }
+
+    private void saveMatching(AnimalEntity animal, Long matchedAnimalId) {
+        MatchingEntity matching = MatchingEntity.builder()
+                .owner(animal)
+                .matchedAnimalId(matchedAnimalId)
+                .matchingDate(LocalDate.now())
+                .build();
+
+        matchingRepository.save(matching);
+    }
+
 }

@@ -1,5 +1,6 @@
 package pl.wsiz.animaltinder.animal.api.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,16 +21,25 @@ public class AnimalController {
 
     private final AnimalService animalService;
 
+    @Operation(summary = "Add animal to user")
     @PostMapping("/user/{userId}/animal")
     ResponseEntity<AnimalDto> addAnimalToUser(@PathVariable Long userId, @RequestBody @Valid AnimalCreateDto animalCreateDto) {
         validateUserRequest(getCurrentUserId(), userId);
         return ResponseEntity.ok(animalService.addAnimal(userId, animalCreateDto));
     }
 
+    @Operation(summary = "Find propositions for animal")
     @GetMapping("/user/{userId}/animal/{animalId}")
     List<AnimalDto> getAnimalProposition(@PathVariable Long userId,@PathVariable Long animalId){
         validateUserRequest(getCurrentUserId(),userId);
         return animalService.getAnimalProposition(userId,animalId);
+    }
+
+    @Operation(summary = "Get matched animals")
+    @GetMapping("/user/{userId}/animal/{animalId}/matchings")
+    List<AnimalDto> getAnimalMatches(@PathVariable Long userId, @PathVariable Long animalId){
+        validateUserRequest(getCurrentUserId(),userId);
+        return animalService.getAnimalMatching(userId, animalId);
     }
 
 }

@@ -48,8 +48,7 @@ public class AnimalEntity {
     @JoinColumn(name = "user_id")
     private UserEntity user;
 
-    
     @OneToMany(mappedBy = "owner",cascade = {CascadeType.PERSIST,CascadeType.MERGE,CascadeType.REMOVE})
-    private Set<InteractionRecordEntity> animalsInteractionHistory = new HashSet<>();
+    private Set<InteractionEntity> animalsInteractionHistory = new HashSet<>();
 
 }

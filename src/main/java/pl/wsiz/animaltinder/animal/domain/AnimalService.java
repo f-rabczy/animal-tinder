@@ -11,6 +11,7 @@ import pl.wsiz.animaltinder.user.domain.UserService;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -19,7 +20,8 @@ public class AnimalService {
     private final AnimalRepository animalRepository;
     private final UserService userService;
     private final AnimalMapper animalMapper;
-    private final InteractionRecordRepository interactionRecordRepository;
+    private final InteractionRepository interactionRepository;
+    private final MatchingRepository matchingRepository;
 
     public AnimalDto addAnimal(Long userId, AnimalCreateDto animalCreateDto) {
         UserEntity user = userService.getUser(userId);
@@ -31,13 +33,24 @@ public class AnimalService {
     public List<AnimalDto> getAnimalProposition(Long userId, Long animalId) {
         UserEntity user = userService.getUser(userId);
         AnimalEntity animal = getUserAnimal(user, animalId);
-        List<Long> allPairedAnimalsIds = interactionRecordRepository.findAllPairedIds(animalId);
+        List<Long> allPairedAnimalsIds = interactionRepository.findAllPairedIds(animalId);
 
         return animalRepository.findAllByCityAndCountyAndCategoryAndUserNot(animal.getCity(), animal.getCounty(), animal.getCategory(), user)
                 .stream()
                 .filter(animal1 -> !allPairedAnimalsIds.contains(animal1.getId()))
                 .map(animalMapper::mapToAnimalDto)
                 .toList();
+    }
+
+    public List<AnimalDto> getAnimalMatching(Long userId, Long animalId){
+        UserEntity user = userService.getUser(userId);
+        AnimalEntity animal = getUserAnimal(user, animalId);
+        List<Long> allMatchedIds = matchingRepository.findAllMatchedIds(animal);
+
+        return animalRepository.findAllById(allMatchedIds)
+                .stream()
+                .map(animalMapper::mapToAnimalDto)
+                .collect(Collectors.toList());
     }
 
     public AnimalEntity getAnimal(Long id) {

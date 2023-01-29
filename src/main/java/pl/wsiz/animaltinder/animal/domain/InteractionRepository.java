@@ -5,8 +5,8 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
-public interface InteractionRecordRepository extends JpaRepository<InteractionRecordEntity, Long> {
+public interface InteractionRepository extends JpaRepository<InteractionEntity, Long> {
 
-    @Query(value = "select p.pairedAnimalId from InteractionRecordEntity p where p.owner.id = :animalId ")
+    @Query(value = "select p.pairedAnimalId from InteractionEntity p where p.owner.id = :animalId ")
     List<Long> findAllPairedIds(Long animalId);
 }
