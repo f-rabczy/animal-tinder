@@ -19,12 +19,14 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import pl.wsiz.animaltinder.auth.filter.JwtRequestFilter;
 
 @EnableWebSecurity
 @Configuration
 @RequiredArgsConstructor
-public class  WebSecurityConfig  {
+public class  WebSecurityConfig  implements WebMvcConfigurer {
 
     private final UserDetailsService userDetailsService;
     private final JwtRequestFilter jwtRequestFilter;
@@ -35,6 +37,11 @@ public class  WebSecurityConfig  {
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userDetailsService)
                 .passwordEncoder(passwordEncoder);
+    }
+
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/**").allowedOrigins("*");
     }
 
     @Bean
