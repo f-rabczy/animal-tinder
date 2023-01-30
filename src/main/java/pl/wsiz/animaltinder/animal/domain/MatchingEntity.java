@@ -31,5 +31,6 @@ public class MatchingEntity {
     private Long matchedAnimalId;
 
     @Column(name = "MATCHING_DATE")
-    private LocalDate matchingDate = LocalDate.now();
+    private LocalDate matchingDate;
+
 }

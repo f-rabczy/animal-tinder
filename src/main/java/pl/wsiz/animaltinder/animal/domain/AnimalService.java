@@ -57,6 +57,10 @@ public class AnimalService {
         return animalRepository.findById(id).orElseThrow(EntityNotFoundException::new);
     }
 
+    public void saveAnimal(AnimalEntity animal){
+        animalRepository.save(animal);
+    }
+
     private AnimalEntity getUserAnimal(UserEntity user, Long animalId) {
         List<AnimalEntity> animalEntities = user.getAnimals()
                 .stream()
@@ -69,4 +73,5 @@ public class AnimalService {
             return animalEntities.get(0);
         }
     }
+
 }

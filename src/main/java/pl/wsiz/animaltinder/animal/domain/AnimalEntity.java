@@ -2,6 +2,7 @@ package pl.wsiz.animaltinder.animal.domain;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import pl.wsiz.animaltinder.animal.domain.enums.AnimalCategory;
 import pl.wsiz.animaltinder.user.domain.UserEntity;
 
 import javax.persistence.*;

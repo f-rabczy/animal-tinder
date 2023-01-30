@@ -1,10 +1,7 @@
 package pl.wsiz.animaltinder.animal.api.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import pl.wsiz.animaltinder.animal.domain.AnimalCategory;
 
-import javax.validation.constraints.Past;
 import javax.validation.constraints.PastOrPresent;
 import java.time.LocalDate;
 

@@ -2,12 +2,16 @@ package pl.wsiz.animaltinder.user.domain;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import pl.wsiz.animaltinder.auth.exception.BusinessException;
+import pl.wsiz.animaltinder.auth.exception.ErrorMessage;
+import pl.wsiz.animaltinder.user.api.dto.NotificationDto;
 import pl.wsiz.animaltinder.user.api.dto.UserCreateDto;
 import pl.wsiz.animaltinder.user.api.dto.UserDto;
 import pl.wsiz.animaltinder.user.mapper.UserMapper;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 
@@ -18,6 +22,8 @@ public class UserService {
     private final UserRepository userRepository;
     private final UserRoleRepository userRoleRepository;
     private final UserMapper userMapper;
+    private final NotificationRepository notificationRepository;
+    private final NotificationMapper notificationMapper;
 
     public Optional<UserEntity> getOptionalOfUserByUsername(String username) {
         return userRepository.findUserWithRolesByUsername(username);
@@ -34,6 +40,13 @@ public class UserService {
     public UserEntity getUser(Long id) {
         return userRepository.findById(id)
                 .orElseThrow(EntityNotFoundException::new);
+    }
+
+    public List<NotificationDto> getUserNotification(Long userId) {
+        return notificationRepository.findAllByUserId(userId)
+                .stream()
+                .map(notificationMapper::mapToNotificationDto)
+                .toList();
     }
 
     private void grantRoles(UserEntity userEntity, Role... roles) {
@@ -57,5 +70,12 @@ public class UserService {
         if (userRepository.findByEmail(request.getEmail()) != null) {
             throw new IllegalArgumentException("Account with given email already exists");
         }
+    }
+
+    public void deleteNotification(Long userId, Long notificationId) {
+        notificationRepository.findNotificationByIdAndUserId(notificationId, userId)
+                .ifPresentOrElse(notificationRepository::delete, () -> {
+                    throw new BusinessException(ErrorMessage.NOTIFICATION_DOES_NOT_EXIST);
+                });
     }
 }

@@ -2,12 +2,18 @@ package pl.wsiz.animaltinder.animal.domain;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import pl.wsiz.animaltinder.animal.domain.enums.LikingStatus;
+import pl.wsiz.animaltinder.animal.domain.enums.MatchingStatus;
 import pl.wsiz.animaltinder.auth.exception.BusinessException;
 import pl.wsiz.animaltinder.auth.exception.ErrorMessage;
+import pl.wsiz.animaltinder.user.domain.NotificationEntity;
+import pl.wsiz.animaltinder.user.domain.UserEntity;
 
 import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.List;
+
+import static pl.wsiz.animaltinder.user.domain.NotificationEntity.NOTIFICATION_MATCH_PATTERN;
 
 @Service
 @RequiredArgsConstructor
@@ -30,6 +36,8 @@ public class InteractionService {
             if (interactionFromAnimalToLike.getLikingStatus().equals(LikingStatus.LIKE)) {
                 interactionFromAnimalToLike.setMatchingStatus(MatchingStatus.MATCHED);
                 createMatchingForAnimals(animal,animalToLike);
+                createNotifications(animal,animalToLike);
+
             }
         } else {
             AnimalInteractionEntity animalInteractionEntity = AnimalInteractionEntity.builder()
@@ -101,6 +109,22 @@ public class InteractionService {
                 .build();
 
         matchingRepository.save(matching);
+    }
+
+    private void createNotifications(AnimalEntity animalOne, AnimalEntity animalTwo){
+        saveNotification(animalOne);
+        saveNotification(animalTwo);
+    }
+
+    private void saveNotification(AnimalEntity animal){
+        UserEntity user = animal.getUser();
+        NotificationEntity notification = NotificationEntity.builder()
+                .content(String.format(NOTIFICATION_MATCH_PATTERN, animal.getName()))
+                .time(LocalDate.now())
+                .user(user)
+                .build();
+        user.getNotifications().add(notification);
+        animalService.saveAnimal(animal);
     }
 
 }

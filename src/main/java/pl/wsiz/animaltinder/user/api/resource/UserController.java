@@ -5,13 +5,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import pl.wsiz.animaltinder.auth.exception.BusinessException;
-import pl.wsiz.animaltinder.auth.exception.ErrorMessage;
+import pl.wsiz.animaltinder.user.api.dto.NotificationDto;
 import pl.wsiz.animaltinder.user.api.dto.UserCreateDto;
 import pl.wsiz.animaltinder.user.api.dto.UserDto;
 import pl.wsiz.animaltinder.user.domain.UserService;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -29,9 +27,15 @@ class UserController {
         return ResponseEntity.ok(userService.createUser(request));
     }
 
-    @GetMapping
-    List<String> get(){
-        throw new BusinessException(ErrorMessage.USER_ACCOUNT_SUSPENDED);
+    @GetMapping("/{userId}/notifications")
+    List<NotificationDto> getNotifications(@PathVariable Long userId){
+        return userService.getUserNotification(userId);
+    }
+
+    @DeleteMapping("/{userId}/notifications/{notificationId}")
+    ResponseEntity<Object> deleteNotification(@PathVariable Long userId, @PathVariable Long notificationId){
+        userService.deleteNotification(userId, notificationId);
+        return ResponseEntity.ok().build();
     }
 
 }

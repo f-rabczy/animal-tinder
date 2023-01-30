@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import pl.wsiz.animaltinder.animal.domain.enums.LikingStatus;
+import pl.wsiz.animaltinder.animal.domain.enums.MatchingStatus;
 
 import javax.persistence.*;
 

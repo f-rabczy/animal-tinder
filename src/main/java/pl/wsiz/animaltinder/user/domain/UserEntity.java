@@ -70,7 +70,7 @@ public class UserEntity {
     @Embedded
     private Address address;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = {CascadeType.ALL})
     private List<AnimalEntity> animals = new ArrayList<>();
 
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
@@ -80,6 +80,9 @@ public class UserEntity {
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
     private Set<UserRoleEntity> roleEntities = new HashSet<>();
+
+    @OneToMany(mappedBy = "user", cascade = {CascadeType.ALL})
+    private List<NotificationEntity> notifications = new ArrayList<>();
 
     public void addRole(UserRoleEntity roleEntity) {
         this.roleEntities.add(roleEntity);
