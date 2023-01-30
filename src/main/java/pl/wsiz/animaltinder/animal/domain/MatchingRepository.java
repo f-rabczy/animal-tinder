@@ -9,4 +9,6 @@ public interface MatchingRepository extends JpaRepository<MatchingEntity,Long > 
 
     @Query(value = "select p.matchedAnimalId from MatchingEntity p where p.owner = :animal ")
     List<Long> findAllMatchedIds(AnimalEntity animal);
+
+    List<MatchingEntity> findAllByOwner(AnimalEntity owner);
 }

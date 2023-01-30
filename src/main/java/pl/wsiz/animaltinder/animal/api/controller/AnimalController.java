@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.wsiz.animaltinder.animal.api.dto.AnimalCreateDto;
 import pl.wsiz.animaltinder.animal.api.dto.AnimalDto;
+import pl.wsiz.animaltinder.animal.api.dto.MatchingDto;
 import pl.wsiz.animaltinder.animal.domain.AnimalService;
 
 import javax.validation.Valid;
@@ -37,7 +38,7 @@ public class AnimalController {
 
     @Operation(summary = "Get matched animals")
     @GetMapping("/user/{userId}/animal/{animalId}/matchings")
-    List<AnimalDto> getAnimalMatches(@PathVariable Long userId, @PathVariable Long animalId){
+    List<MatchingDto> getAnimalMatches(@PathVariable Long userId, @PathVariable Long animalId){
         validateUserRequest(getCurrentUserId(),userId);
         return animalService.getAnimalMatching(userId, animalId);
     }

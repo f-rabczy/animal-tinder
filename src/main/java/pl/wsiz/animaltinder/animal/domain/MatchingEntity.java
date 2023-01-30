@@ -33,4 +33,6 @@ public class MatchingEntity {
     @Column(name = "MATCHING_DATE")
     private LocalDate matchingDate;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    private ChatEntity chatEntity;
 }

@@ -35,8 +35,8 @@ public class InteractionService {
         if (interactionFromAnimalToLike != null) {
             if (interactionFromAnimalToLike.getLikingStatus().equals(LikingStatus.LIKE)) {
                 interactionFromAnimalToLike.setMatchingStatus(MatchingStatus.MATCHED);
-                createMatchingForAnimals(animal,animalToLike);
-                createNotifications(animal,animalToLike);
+                saveMatchingForAnimals(animal, animalToLike);
+                saveNotifications(animal, animalToLike);
 
             }
         } else {
@@ -45,7 +45,7 @@ public class InteractionService {
                     .receiver(animalToLike)
                     .likingStatus(LikingStatus.LIKE)
                     .build();
-            createPairingHistoryForAnimals(animal, animalToLike);
+            savePairingHistoryForAnimals(animal, animalToLike);
             animalInteractionRepository.save(animalInteractionEntity);
         }
     }
@@ -67,7 +67,7 @@ public class InteractionService {
                     .likingStatus(LikingStatus.DISLIKE)
                     .matchingStatus(MatchingStatus.UNMATCHED)
                     .build();
-            createPairingHistoryForAnimals(animal, animalToDislike);
+            savePairingHistoryForAnimals(animal, animalToDislike);
             animalInteractionRepository.save(animalInteractionEntity);
         }
     }
@@ -79,7 +79,7 @@ public class InteractionService {
         }
     }
 
-    private void createPairingHistoryForAnimals(AnimalEntity animalOne, AnimalEntity animalTwo) {
+    private void savePairingHistoryForAnimals(AnimalEntity animalOne, AnimalEntity animalTwo) {
         savePairing(animalOne, animalTwo.getId());
         savePairing(animalTwo, animalOne.getId());
     }
@@ -96,27 +96,35 @@ public class InteractionService {
         }
     }
 
-    private void createMatchingForAnimals(AnimalEntity animalOne, AnimalEntity animalTwo) {
-        saveMatching(animalOne, animalTwo.getId());
-        saveMatching(animalTwo, animalOne.getId());
+    private void saveMatchingForAnimals(AnimalEntity animalOne, AnimalEntity animalTwo) {
+        ChatEntity chat = createChat(animalOne, animalTwo);
+        saveMatching(animalOne, animalTwo.getId(), chat);
+        saveMatching(animalTwo, animalOne.getId(), chat);
     }
 
-    private void saveMatching(AnimalEntity animal, Long matchedAnimalId) {
+    private void saveMatching(AnimalEntity animal, Long matchedAnimalId, ChatEntity chatEntity) {
         MatchingEntity matching = MatchingEntity.builder()
                 .owner(animal)
                 .matchedAnimalId(matchedAnimalId)
                 .matchingDate(LocalDate.now())
+                .chatEntity(chatEntity)
                 .build();
-
         matchingRepository.save(matching);
     }
 
-    private void createNotifications(AnimalEntity animalOne, AnimalEntity animalTwo){
+    private ChatEntity createChat(AnimalEntity animalOne, AnimalEntity animalTwo) {
+        return ChatEntity.builder()
+                .animalOne(animalOne)
+                .animalTwo(animalTwo)
+                .build();
+    }
+
+    private void saveNotifications(AnimalEntity animalOne, AnimalEntity animalTwo) {
         saveNotification(animalOne);
         saveNotification(animalTwo);
     }
 
-    private void saveNotification(AnimalEntity animal){
+    private void saveNotification(AnimalEntity animal) {
         UserEntity user = animal.getUser();
         NotificationEntity notification = NotificationEntity.builder()
                 .content(String.format(NOTIFICATION_MATCH_PATTERN, animal.getName()))
@@ -126,5 +134,6 @@ public class InteractionService {
         user.getNotifications().add(notification);
         animalService.saveAnimal(animal);
     }
+
 
 }
