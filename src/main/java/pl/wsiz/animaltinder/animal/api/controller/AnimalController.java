@@ -22,6 +22,11 @@ public class AnimalController {
 
     private final AnimalService animalService;
 
+    @GetMapping("/user/{userId}/animal")
+    List<AnimalDto> getUserAnimals(@PathVariable Long userId){
+        return animalService.getUserAnimals(userId);
+    }
+
     @Operation(summary = "Add animal to user")
     @PostMapping("/user/{userId}/animal")
     ResponseEntity<AnimalDto> addAnimalToUser(@PathVariable Long userId, @RequestBody @Valid AnimalCreateDto animalCreateDto) {

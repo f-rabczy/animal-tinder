@@ -25,6 +25,13 @@ public class AnimalService {
     private final InteractionRepository interactionRepository;
     private final MatchingRepository matchingRepository;
 
+    public List<AnimalDto> getUserAnimals(Long userId) {
+        return animalRepository.findAllByUserId(userId)
+                .stream()
+                .map(animalMapper::mapToAnimalDto)
+                .toList();
+    }
+
     public AnimalDto addAnimal(Long userId, AnimalCreateDto animalCreateDto) {
         UserEntity user = userService.getUser(userId);
         AnimalEntity animalEntity = animalMapper.mapToAnimalEntity(animalCreateDto, user);
@@ -100,5 +107,4 @@ public class AnimalService {
         }
         return result;
     }
-
 }
