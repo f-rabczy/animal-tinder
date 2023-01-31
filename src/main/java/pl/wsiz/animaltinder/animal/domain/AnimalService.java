@@ -13,7 +13,6 @@ import pl.wsiz.animaltinder.user.domain.UserService;
 import javax.persistence.EntityNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -39,6 +38,12 @@ public class AnimalService {
         return animalMapper.mapToAnimalDto(animalRepository.save(animalEntity));
     }
 
+    public void deleteAnimal(Long userId, Long animalId) {
+        UserEntity user = userService.getUser(userId);
+        AnimalEntity animal = getUserAnimal(user, animalId);
+        animalRepository.delete(animal);
+    }
+
     public List<AnimalDto> getAnimalProposition(Long userId, Long animalId) {
         UserEntity user = userService.getUser(userId);
         AnimalEntity animal = getUserAnimal(user, animalId);
@@ -59,7 +64,7 @@ public class AnimalService {
         List<Long> allMatchedIds = extractIds(matchings);
         List<AnimalEntity> matchedAnimals = animalRepository.findAllById(allMatchedIds);
 
-        return mapToMatchingDtoList(matchings,matchedAnimals);
+        return mapToMatchingDtoList(matchings, matchedAnimals);
     }
 
     public AnimalEntity getAnimal(Long id) {
@@ -89,11 +94,11 @@ public class AnimalService {
                 .toList();
     }
 
-    private List<MatchingDto> mapToMatchingDtoList(List<MatchingEntity> matchings, List<AnimalEntity> matchedAnimals){
+    private List<MatchingDto> mapToMatchingDtoList(List<MatchingEntity> matchings, List<AnimalEntity> matchedAnimals) {
         List<MatchingDto> result = new ArrayList<>();
         for (MatchingEntity matching : matchings) {
             for (AnimalEntity matchedAnimal : matchedAnimals) {
-                if(matching.getMatchedAnimalId().equals(matchedAnimal.getId())){
+                if (matching.getMatchedAnimalId().equals(matchedAnimal.getId())) {
                     MatchingDto matchingDto = MatchingDto.builder()
                             .id(matching.getId())
                             .name(matchedAnimal.getName())

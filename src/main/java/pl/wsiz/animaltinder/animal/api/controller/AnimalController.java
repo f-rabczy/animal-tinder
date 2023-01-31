@@ -23,7 +23,7 @@ public class AnimalController {
     private final AnimalService animalService;
 
     @GetMapping("/user/{userId}/animal")
-    List<AnimalDto> getUserAnimals(@PathVariable Long userId){
+    List<AnimalDto> getUserAnimals(@PathVariable Long userId) {
         return animalService.getUserAnimals(userId);
     }
 
@@ -34,17 +34,23 @@ public class AnimalController {
         return ResponseEntity.ok(animalService.addAnimal(userId, animalCreateDto));
     }
 
+    @DeleteMapping("/user/{userId}/animal/{animalId}")
+    ResponseEntity<Object> deleteAnimal(@PathVariable Long userId, @PathVariable Long animalId) {
+        animalService.deleteAnimal(userId, animalId);
+        return ResponseEntity.ok().build();
+    }
+
     @Operation(summary = "Find propositions for animal")
     @GetMapping("/user/{userId}/animal/{animalId}")
-    List<AnimalDto> getAnimalProposition(@PathVariable Long userId,@PathVariable Long animalId){
-        validateUserRequest(getCurrentUserId(),userId);
-        return animalService.getAnimalProposition(userId,animalId);
+    List<AnimalDto> getAnimalProposition(@PathVariable Long userId, @PathVariable Long animalId) {
+        validateUserRequest(getCurrentUserId(), userId);
+        return animalService.getAnimalProposition(userId, animalId);
     }
 
     @Operation(summary = "Get matched animals")
     @GetMapping("/user/{userId}/animal/{animalId}/matchings")
-    List<MatchingDto> getAnimalMatches(@PathVariable Long userId, @PathVariable Long animalId){
-        validateUserRequest(getCurrentUserId(),userId);
+    List<MatchingDto> getAnimalMatches(@PathVariable Long userId, @PathVariable Long animalId) {
+        validateUserRequest(getCurrentUserId(), userId);
         return animalService.getAnimalMatching(userId, animalId);
     }
 
