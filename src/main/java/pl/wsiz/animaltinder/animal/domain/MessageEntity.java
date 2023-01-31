@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "MESSAGES")
@@ -28,6 +29,6 @@ public class MessageEntity {
     private String content;
 
     @Column(name = "TIME")
-    private LocalDate time;
+    private LocalDateTime time;
 
 }

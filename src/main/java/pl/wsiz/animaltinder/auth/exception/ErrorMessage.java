@@ -7,6 +7,7 @@ import lombok.Getter;
 @Getter
 public enum ErrorMessage {
 
+    ANIMAL_CHAT_DOES_NOT_EXIST("Animal with given id does not have a chat with this id"),
     NOTIFICATION_DOES_NOT_EXIST("User with given id, does not have this notification"),
     INTERACTION_ALREADY_EXISTS("Interaction with this animal is already made"),
     REQUEST_NOT_ALLOWED("You are not allowed to make this request"),

@@ -28,7 +28,7 @@ public class ChatEntity {
     @ManyToOne
     private AnimalEntity animalTwo;
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     private List<MessageEntity> messages = new ArrayList<>();
 
 }
