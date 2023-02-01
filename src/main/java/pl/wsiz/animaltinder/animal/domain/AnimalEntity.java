@@ -1,7 +1,6 @@
 package pl.wsiz.animaltinder.animal.domain;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import pl.wsiz.animaltinder.animal.domain.enums.AnimalCategory;
 import pl.wsiz.animaltinder.user.domain.UserEntity;
 
@@ -12,7 +11,9 @@ import java.util.Set;
 
 @Entity
 @Table(name = "ANIMALS")
-@Data
+@Getter
+@Setter
+@EqualsAndHashCode
 @NoArgsConstructor
 public class AnimalEntity {
 
@@ -45,11 +46,11 @@ public class AnimalEntity {
     @NotNull
     private String county;
 
-    @ManyToOne(cascade = {CascadeType.PERSIST,CascadeType.MERGE})
+    @ManyToOne
     @JoinColumn(name = "user_id")
     private UserEntity user;
 
-    @OneToMany(mappedBy = "owner",cascade = {CascadeType.PERSIST,CascadeType.MERGE,CascadeType.REMOVE})
+    @OneToMany(mappedBy = "owner",cascade = {CascadeType.ALL})
     private Set<InteractionEntity> animalsInteractionHistory = new HashSet<>();
 
 }

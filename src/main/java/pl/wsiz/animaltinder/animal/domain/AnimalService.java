@@ -11,6 +11,7 @@ import pl.wsiz.animaltinder.user.domain.UserEntity;
 import pl.wsiz.animaltinder.user.domain.UserService;
 
 import javax.persistence.EntityNotFoundException;
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,10 +32,11 @@ public class AnimalService {
                 .toList();
     }
 
+    @Transactional
     public AnimalDto addAnimal(Long userId, AnimalCreateDto animalCreateDto) {
         UserEntity user = userService.getUser(userId);
-        AnimalEntity animalEntity = animalMapper.mapToAnimalEntity(animalCreateDto, user);
-        user.getAnimals().add(animalEntity);
+        AnimalEntity animalEntity = animalMapper.mapToAnimalEntity(animalCreateDto);
+        animalEntity.setUser(user);
         return animalMapper.mapToAnimalDto(animalRepository.save(animalEntity));
     }
 

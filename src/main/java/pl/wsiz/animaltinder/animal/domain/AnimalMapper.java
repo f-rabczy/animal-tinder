@@ -14,7 +14,7 @@ import java.time.Period;
 public interface AnimalMapper {
 
     @Mapping(source = "animalCreateDto", target = "age", qualifiedByName = "calculateAge")
-    AnimalEntity mapToAnimalEntity(AnimalCreateDto animalCreateDto, UserEntity user);
+    AnimalEntity mapToAnimalEntity(AnimalCreateDto animalCreateDto);
 
     AnimalDto mapToAnimalDto(AnimalEntity animal);
 

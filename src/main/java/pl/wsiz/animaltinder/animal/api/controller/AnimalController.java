@@ -29,8 +29,8 @@ public class AnimalController {
 
     @Operation(summary = "Add animal to user")
     @PostMapping("/user/{userId}/animal")
-    ResponseEntity<AnimalDto> addAnimalToUser(@PathVariable Long userId, @RequestBody @Valid AnimalCreateDto animalCreateDto) {
-        validateUserRequest(getCurrentUserId(), userId);
+    public ResponseEntity<AnimalDto> addAnimalToUser(@PathVariable Long userId, @RequestBody @Valid AnimalCreateDto animalCreateDto) {
+//        validateUserRequest(getCurrentUserId(), userId);
         return ResponseEntity.ok(animalService.addAnimal(userId, animalCreateDto));
     }
 
@@ -43,14 +43,14 @@ public class AnimalController {
     @Operation(summary = "Find propositions for animal")
     @GetMapping("/user/{userId}/animal/{animalId}")
     List<AnimalDto> getAnimalProposition(@PathVariable Long userId, @PathVariable Long animalId) {
-        validateUserRequest(getCurrentUserId(), userId);
+//        validateUserRequest(getCurrentUserId(), userId);
         return animalService.getAnimalProposition(userId, animalId);
     }
 
     @Operation(summary = "Get matched animals")
     @GetMapping("/user/{userId}/animal/{animalId}/matchings")
     List<MatchingDto> getAnimalMatches(@PathVariable Long userId, @PathVariable Long animalId) {
-        validateUserRequest(getCurrentUserId(), userId);
+//        validateUserRequest(getCurrentUserId(), userId);
         return animalService.getAnimalMatching(userId, animalId);
     }
 
