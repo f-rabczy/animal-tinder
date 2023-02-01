@@ -36,6 +36,4 @@ public class AnimalInteractionEntity {
     @Enumerated(EnumType.STRING)
     private MatchingStatus matchingStatus;
 
-    @Transient
-    private boolean pairingInitiated = matchingStatus != null;
 }
