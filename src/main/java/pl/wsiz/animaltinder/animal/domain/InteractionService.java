@@ -45,9 +45,10 @@ public class InteractionService {
                     .receiver(animalToLike)
                     .likingStatus(LikingStatus.LIKE)
                     .build();
-            savePairingHistory(animal, animalToLike.getId());
             animalInteractionRepository.save(animalInteractionEntity);
         }
+        savePairingHistory(animal, animalToLike.getId());
+
     }
 
     @Transactional
@@ -67,9 +68,10 @@ public class InteractionService {
                     .likingStatus(LikingStatus.DISLIKE)
                     .matchingStatus(MatchingStatus.UNMATCHED)
                     .build();
-            savePairingHistory(animal, animalToDislike.getId());
             animalInteractionRepository.save(animalInteractionEntity);
         }
+        savePairingHistory(animal, animalToDislike.getId());
+
     }
 
     private void validateIfInteractionAlreadyExist(AnimalEntity animal, AnimalEntity animalToInteractWith) {
