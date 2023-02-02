@@ -1,5 +1,6 @@
 package pl.wsiz.animaltinder.auth.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -22,6 +23,7 @@ public class AuthenticationController {
     private final JwtUserDetailsService userDetailsService;
     private final JwtUtil jwtUtil;
 
+    @Operation(summary = "Login")
     @PostMapping("/login")
     ResponseEntity<?> authenticateUser(@RequestBody AuthenticationRequest request) {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
