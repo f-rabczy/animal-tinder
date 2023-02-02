@@ -57,7 +57,7 @@ public class AnimalController {
     }
 
     @Operation(summary = "Get matched animals")
-    @GetMapping("/user/{userId}/animals/{animalId}/matchings")
+    @GetMapping("/users/{userId}/animals/{animalId}/matchings")
     List<MatchingDto> getAnimalMatches(@PathVariable Long userId, @PathVariable Long animalId) {
 //        validateUserRequest(getCurrentUserId(), userId);
         return animalService.getAnimalMatching(userId, animalId);
