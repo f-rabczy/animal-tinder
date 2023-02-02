@@ -1,5 +1,7 @@
 package pl.wsiz.animaltinder.user.domain;
 
+import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -19,11 +21,14 @@ import pl.wsiz.animaltinder.auth.exception.ErrorMessage;
 import pl.wsiz.animaltinder.user.api.dto.PictureDto;
 
 import javax.annotation.PreDestroy;
+import javax.imageio.ImageIO;
 
 @Service
 public class FileStorageService {
 
     public static final String FILE_STORAGE_LOCATION = "./uploads/files";
+    public static final int WIDTH = 600;
+    public static final int HEIGHT = 400;
     private final Path fileStorageLocation;
 
     @Autowired
@@ -47,23 +52,17 @@ public class FileStorageService {
                 throw new RuntimeException(
                         "Sorry! Filename contains invalid path sequence " + fileName);
             }
-
             Path targetLocation = this.fileStorageLocation.resolve(fileName);
-            Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
+            BufferedImage bufferedImage = ImageIO.read(file.getInputStream());
+            Image scaledInstance = bufferedImage.getScaledInstance(WIDTH, HEIGHT, Image.SCALE_DEFAULT);
+            BufferedImage outputImage = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
+            outputImage.getGraphics().drawImage(scaledInstance, 0, 0, null);
+            ImageIO.write(outputImage,"jpeg",targetLocation.toFile());
 
             return new PictureDto(fileName);
         } catch (IOException ex) {
             throw new RuntimeException("Could not store file " + fileName + ". Please try again!", ex);
         }
-    }
-
-    private String getFileExtension(String fileName) {
-        if (fileName == null) {
-            return null;
-        }
-        String[] fileNameParts = fileName.split("\\.");
-
-        return fileNameParts[fileNameParts.length - 1];
     }
 
     @PreDestroy
