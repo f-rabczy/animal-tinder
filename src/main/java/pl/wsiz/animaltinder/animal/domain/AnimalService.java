@@ -43,6 +43,7 @@ public class AnimalService {
     public void deleteAnimal(Long userId, Long animalId) {
         UserEntity user = userService.getUser(userId);
         AnimalEntity animal = getUserAnimal(user, animalId);
+        user.getAnimals().remove(animal);
         animalRepository.delete(animal);
     }
 
