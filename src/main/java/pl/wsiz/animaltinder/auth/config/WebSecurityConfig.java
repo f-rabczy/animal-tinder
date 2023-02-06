@@ -75,6 +75,7 @@ public class  WebSecurityConfig  implements WebMvcConfigurer {
                         "/v3/api-docs/", "/v2/api-docs", "/swagger-ui/index.html", "/configuration/**",
                         "/swagger-resources/**","/h2-console/*","swagger-ui/**", "swagger-ui**", "/v3/api-docs/**", "/v3/api-docs**").permitAll()
                 .antMatchers(HttpMethod.POST, "/users").permitAll()
+                .antMatchers(HttpMethod.GET,"/users/*/pictures","/users/*/animals/*/pictures").permitAll()
                 .anyRequest().authenticated());
         httpSecurity.exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint);
         httpSecurity.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);

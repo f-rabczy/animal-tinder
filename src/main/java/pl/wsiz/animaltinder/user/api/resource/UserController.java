@@ -57,7 +57,7 @@ class UserController {
 
     @Operation(summary = "Get user picture")
     @GetMapping(value = "/{userId}/pictures",produces = MediaType.IMAGE_JPEG_VALUE)
-    byte[] getUserPicture(@PathVariable Long userId) throws IOException {
+    byte[] getUserPicture(@PathVariable Long userId){
         return fileStorageService.getPicture(userId,PictureType.USER);
     }
 

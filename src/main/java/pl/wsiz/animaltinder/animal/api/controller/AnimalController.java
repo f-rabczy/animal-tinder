@@ -19,9 +19,6 @@ import javax.validation.Valid;
 import java.io.IOException;
 import java.util.List;
 
-import static pl.wsiz.animaltinder.auth.util.RequestValidator.validateUserRequest;
-import static pl.wsiz.animaltinder.auth.util.UserDetailsUtil.getCurrentUserId;
-
 @RestController
 @RequiredArgsConstructor
 public class AnimalController {
@@ -71,7 +68,7 @@ public class AnimalController {
 
     @Operation(summary = "Get animal picture")
     @GetMapping(value = "/users/{userId}/animals/{animalId}/pictures", produces = MediaType.IMAGE_JPEG_VALUE)
-    byte[] getUserPicture(@PathVariable Long userId, @PathVariable Long animalId) throws IOException {
+    byte[] getAnimalPicture(@PathVariable Long userId, @PathVariable Long animalId)  {
         return fileStorageService.getPicture(animalId, PictureType.ANIMAL);
     }
 

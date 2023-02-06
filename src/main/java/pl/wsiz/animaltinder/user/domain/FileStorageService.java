@@ -1,17 +1,6 @@
 package pl.wsiz.animaltinder.user.domain;
 
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
-import java.util.Date;
-
 import org.apache.tomcat.util.http.fileupload.FileUtils;
-import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
@@ -22,6 +11,13 @@ import pl.wsiz.animaltinder.user.api.dto.PictureDto;
 
 import javax.annotation.PreDestroy;
 import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 @Service
 public class FileStorageService {
@@ -57,7 +53,7 @@ public class FileStorageService {
             Image scaledInstance = bufferedImage.getScaledInstance(WIDTH, HEIGHT, Image.SCALE_DEFAULT);
             BufferedImage outputImage = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
             outputImage.getGraphics().drawImage(scaledInstance, 0, 0, null);
-            ImageIO.write(outputImage,"jpeg",targetLocation.toFile());
+            ImageIO.write(outputImage, "jpeg", targetLocation.toFile());
 
             return new PictureDto(fileName);
         } catch (IOException ex) {
@@ -73,9 +69,9 @@ public class FileStorageService {
     public byte[] getPicture(Long id, PictureType pictureType) {
         String fileName = determinePictureName(id, pictureType);
         byte[] result;
-        try{
+        try {
             result = Files.readAllBytes(Paths.get(FILE_STORAGE_LOCATION + "/" + fileName));
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new BusinessException(ErrorMessage.NO_PICTURE_AVAILABLE);
         }
         return result;
